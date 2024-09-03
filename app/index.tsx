@@ -1,9 +1,9 @@
 import CartItem from "@/components/cart-item";
-import { Text, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 export default function Index() {
   return (
-    <View
+    <GestureHandlerRootView
       style={{
         flex: 1,
         justifyContent: "center",
@@ -16,6 +16,6 @@ export default function Index() {
         price={26.37}
         quantity={2}
       />
-    </View>
+    </GestureHandlerRootView>
   );
 }
