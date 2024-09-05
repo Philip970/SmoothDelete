@@ -1,20 +1,52 @@
-import CartItem from "@/components/cart-item";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Animated, { Layout, LinearTransition } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import CartItem from "@/components/cart-item";
+import { SampleItems } from "@/data";
+import CartHeader from "@/components/cart-header";
+import { useState } from "react";
 
 export default function Index() {
+  const [data, setData] = useState(SampleItems);
+  const insets = useSafeAreaInsets();
+
+  const handleDelete = (id: number) => {
+    const newData = data.filter((item) => item.id !== id);
+    setData(newData);
+  };
+
+  const handleQuantityChange = (id: number, quantity: number) => {
+    const newData = data.map((item) => {
+      if (item.id === id) {
+        return { ...item, quantity };
+      }
+      return item;
+    });
+    setData(newData);
+  };
+
   return (
     <GestureHandlerRootView
       style={{
         flex: 1,
-        justifyContent: "center",
+        marginTop: insets.top,
+        backgroundColor: "white",
       }}
     >
-      <CartItem
-        image="https://m.media-amazon.com/images/I/61V98P7+jiL._AC_UF894,1000_QL80_.jpg"
-        title="2023 Sneakers"
-        description="Women Sport Shoes"
-        price={26.37}
-        quantity={2}
+      <Animated.FlatList
+        data={data}
+        keyExtractor={(item) => item.id.toString()}
+        ListHeaderComponent={<CartHeader itemCount={data.length} />}
+        renderItem={({ item }) => (
+          <CartItem
+            {...item}
+            onDelete={() => handleDelete(item.id)}
+            onQuantityChange={(quantity) =>
+              handleQuantityChange(item.id, quantity)
+            }
+          />
+        )}
       />
     </GestureHandlerRootView>
   );
